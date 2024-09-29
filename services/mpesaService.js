@@ -1,12 +1,11 @@
 const axios = require('axios');
 const { getAuthToken } = require('../utils/mpesaAuth');
-const moment = require('moment'); // To handle timestamps
+const moment = require('moment'); 
 require('dotenv').config();
 
 const stkPushRequest = async (amount, phoneNumber, accountReference, transactionDesc) => {
   try {
-    console.log('Fetching authentication token...');
-    const token = await getAuthToken(); // Get authentication token from MPESA API
+    const token = await getAuthToken();
     console.log('Token retrieved:', token);
 
     const shortCode = process.env.SHORTCODE; // Shortcode from your MPESA account
@@ -17,6 +16,7 @@ const stkPushRequest = async (amount, phoneNumber, accountReference, transaction
     // Prepare payload for STK Push request
     const payload = {
       BusinessShortCode: shortCode,
+      //  Password: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
       Password: password,
       Timestamp: timestamp,
       TransactionType: "CustomerPayBillOnline",
@@ -25,7 +25,7 @@ const stkPushRequest = async (amount, phoneNumber, accountReference, transaction
       PartyB: shortCode, // MPESA Shortcode receiving the money
       PhoneNumber: phoneNumber, // Phone number to send the STK Push to
       CallBackURL: process.env.CALLBACK_URL, // The callback URL for payment result
-      AccountReference: accountReference, // Reference for the payment (like invoice number)
+      AccountReference: accountReference|| "Test", // Reference for the payment (like invoice number)
       TransactionDesc: transactionDesc || "Payment for goods", // A description for the payment
     };
 
@@ -34,7 +34,8 @@ const stkPushRequest = async (amount, phoneNumber, accountReference, transaction
     // Send STK Push request to MPESA API
     console.log('Sending STK Push request...');
     const response = await axios.post(
-      'https://sandbox.safaricom.co.ke/v1/online/pay',
+      'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+      // 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
       payload, // Use the payload object as the payload
       {
         headers: {
