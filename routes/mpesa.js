@@ -2,6 +2,7 @@ const express = require('express');
 const { stkPush } = require('../controllers/mpesaController');
 const router = express.Router();
 
+//nb
 /**
  * @swagger
  * /mpesa/stkpush:
